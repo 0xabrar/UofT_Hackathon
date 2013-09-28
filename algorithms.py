@@ -124,7 +124,7 @@ class BubbleSort():
                     
     def bubble_sort(self: object, canvas: Canvas, sorter: SortingGraphics, unordered_list: list) -> None:
         '''
-        Perform BuubleSort and call the graphics_interface functions to display.
+        Perform BubbleSort and call the graphics_interface functions to display.
         '''
         for i in range(len(unordered_list)):
             for k in range(len(unordered_list) - 1, i, -1 ):
@@ -145,39 +145,38 @@ class MergeSort():
         self.sorter = SortingGraphics(canvas, unsorted_list)
         self.canvas = canvas
         
+        self.merge_sort(unsorted_list)
+        
         #start a new thread of MergeSort                         
-        t = Thread(target = self.merge_sort, args = (self.sorter, unsorted_list))
-        t.start()        
+        #t = Thread(target = self.merge_sort, arg = unsorted_list)
+        #t.start()    
         
-        
-        
-    def merge_sort(self: object, sorter: SortingGraphics, unsorted_list: list) -> None:
-        '''
-        Perform MergeSort and call the graphics_interface to display.
-        '''
-        if (len(unsorted_list) < 2):
-            return unsorted_list
-        m = len(unsorted_list) // 2
-        
-        return self.merge(self.merge_sort(sorter, unsorted_list[:m]), self.merge_sort(sorter, unsorted_list[m:]))
-        
-    
-    def merge(self: object, unsorted_list: list, r: int) -> None:
+    def merge(self, left, right):
         result = []
-        i = j = 0
-        
-        while (i < len(unsorted_list) and j < len(r)):
-            if unsorted_list[i] < r[j]:
-                result.append(unsorted_list[i])
+        i ,j = 0, 0
+        while i < len(left) and j < len(right):
+            if left[i] <= right[j]:
+                result.append(left[i])
                 i += 1
             else:
-                result.append(r[j])
-                j += 1            
-            result += unsorted_list[i:]
-            result += r[j:]
-            self.sorter.__init__(self.canvas, result)
-            time.sleep(0.005)
-            return result            
+                result.append(right[j])
+                j += 1
+                
+        result += left[i:]
+        result += right[j:]
+        
+        return result
+
+    def merge_sort(self, unsorted_list):
+        '''
+        Perform a MergeSort and call the graphics_interface functionality.
+        '''
+        if len(unsorted_list) < 2:
+            return unsorted_list
+        middle = len(unsorted_list) // 2
+        left = self.merge_sort(unsorted_list[:middle])
+        right = self.merge_sort(unsorted_list[middle:])
+        return self.merge(left, right)          
     
 class HeapSort():
     '''

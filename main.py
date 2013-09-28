@@ -112,7 +112,7 @@ class Controller():
         funky.grid(row = 2, column = 18)
         
         self.add_algorithms()
-        self.next_algorithm(canvas)	
+        #self.next_algorithm(canvas)	
         root.mainloop()
         
         
