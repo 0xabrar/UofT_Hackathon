@@ -83,7 +83,7 @@ class SelectionSort():
             for y in range(x,len(unsorted_list)):
             #individual bars of interest are highlighted then turned back to normal
                 sorter.highlight(canvas, unsorted_list, y, True)
-                time.sleep(0.005)
+                time.sleep(0.0005)
                 if unsorted_list[index] > unsorted_list[y]:
                     index = y
                 sorter.highlight(canvas, unsorted_list, y, False)
@@ -137,9 +137,98 @@ class MergeSort():
     The class responsible for the implementation of the MergeSort algorithm.
     Operates in n(log n) time.
     '''
-    #TODO: implement
     
+    def __init__(self: object, canvas: Canvas) -> None:
+        
+        #import information stored inside class attributes
+        unsorted_list = create_random_list()
+        self.sorter = SortingGraphics(canvas, unsorted_list)
+        self.canvas = canvas
+        
+        #start a new thread of MergeSort                         
+        t = Thread(target = self.merge_sort, args = (self.sorter, unsorted_list))
+        t.start()        
+        
+        
+        
+    def merge_sort(self: object, sorter: SortingGraphics, unsorted_list: list) -> None:
+        '''
+        Perform MergeSort and call the graphics_interface to display.
+        '''
+        if (len(unsorted_list) < 2):
+            return unsorted_list
+        m = len(unsorted_list) // 2
+        
+        return self.merge(self.merge_sort(sorter, unsorted_list[:m]), self.merge_sort(sorter, unsorted_list[m:]))
+        
     
+    def merge(self: object, unsorted_list: list, r: int) -> None:
+        result = []
+        i = j = 0
+        
+        while (i < len(unsorted_list) and j < len(r)):
+            if unsorted_list[i] < r[j]:
+                result.append(unsorted_list[i])
+                i += 1
+            else:
+                result.append(r[j])
+                j += 1            
+            result += unsorted_list[i:]
+            result += r[j:]
+            self.sorter.__init__(self.canvas, result)
+            time.sleep(0.005)
+            return result            
+    
+class HeapSort():
+    '''
+    The class responsible for the implementation of the HeapSort algorithm.
+    '''
+    def __init__(self: object, canvas: Canvas) -> None:
+        unsorted_list = create_random_list()
+        sorter = SortingGraphics(canvas, unsorted_list)
+        
+        #starts a running thread
+        t = Thread(target = self.heap_sort, args = (canvas, sorter, unsorted_list))
+        t.start()
+        
+    def heapify(self: object, canvas: Canvas, sorter: SortingGraphics, unordered_list: list, end: int, i: int) -> None:
+        '''
+        Transform into Heap Order
+        '''
+        left = 2 * i + 1
+        right = 2 * (i + 1)
+        
+        maximum = i
+        if (left < end and unordered_list[i] < unordered_list[left]):
+            maximum = left
+        if (right < end and unordered_list[maximum] < unordered_list[right]):
+            maximum = right
+        if (maximum != i):
+            self.swap(canvas, sorter, unordered_list, i, maximum)
+            self.heapify(canvas, sorter, unordered_list, end, maximum)
+            
+    def swap(self: object, canvas: Canvas, sorter: SortingGraphics, unordered_list: list, i: int, j: int) -> None:
+        '''
+        Swap two values and update graphics.
+        
+        '''
+        unordered_list[i], unordered_list[j] = unordered_list[j], unordered_list[i]
+        sorter.swap(canvas, unordered_list, i, j)
+        
+        #create a delay
+        time.sleep(0.005)
+        
+    def heap_sort(self: object, canvas: Canvas, sorter: SortingGraphics, unordered_list: list) -> None:
+        '''
+        Perform HeapSort and call the graphics_interface to display.
+        '''
+        end = len(unordered_list)
+        start = end // ( 2 - 1)
+        for i in range (start , -1, -1):
+            self.heapify(canvas, sorter, unordered_list, end, i)
+        for i in range(end - 1, 0, -1):
+            self.swap(canvas, sorter, unordered_list, i, 0)
+            self.heapify(canvas, sorter, unordered_list, i, 0)
     
     
 class Dijkstra():

@@ -32,10 +32,14 @@ class Controller():
             self.algorithm_classes.append(SelectionSort)
             self.algorithm_classes.append(InsertionSort)
             self.algorithm_classes.append(BubbleSort)
+            self.algorithm_classes.append(HeapSort)
+            self.algorithm_classes.append(MergeSort)
             
             self.algorithm_names.append('Selection Sort')
             self.algorithm_names.append('Insertion Sort')
-            self.algorithm_names.append('Bubble Sort')            
+            self.algorithm_names.append('Bubble Sort')      
+            self.algorithm_names.append('Heap Sort')
+            self.algorithm_names.append('Merge Sort')
             
             #used to maintain information about current algorithm
             self.current_algorithm_index = 0
@@ -44,6 +48,9 @@ class Controller():
         '''
         Starts the processing of the previous algorithm in the algorithm collection.
         '''
+        name = ttk.Label(text = self.algorithm_names[self.current_algorithm_index])
+        name.grid(row = 2, column = 3)         
+        
         self.algorithm_classes[self.current_algorithm_index](canvas)
         #return to last class if past beginning of list
         self.current_algorithm_index = (self.current_algorithm_index - 1) % len(self.algorithm_classes)
@@ -52,8 +59,8 @@ class Controller():
         '''
         Starts the processing of the next algorithm in the algorithm collection.
         '''    
-        name = tkk.Label(self.algorithm_names[current_algorithm_index])
-        name.grid(row = 2, column = 4) 
+        name = ttk.Label(text = self.algorithm_names[self.current_algorithm_index])
+        name.grid(row = 2, column = 3) 
         
         self.algorithm_classes[self.current_algorithm_index](canvas)
         #return to first class if past end of list
@@ -105,10 +112,10 @@ class Controller():
         funky.grid(row = 2, column = 18)
         
         self.add_algorithms()
+        self.next_algorithm(canvas)	
         root.mainloop()
         
         
 #TODO: get rid of
 controller = Controller()
-
 
