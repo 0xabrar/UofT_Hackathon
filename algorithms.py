@@ -166,7 +166,7 @@ class MergeSort():
         result += right[j:]
         
         return result
-
+    
     def merge_sort(self, unsorted_list):
         '''
         Perform a MergeSort and call the graphics_interface functionality.

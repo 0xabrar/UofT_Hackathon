@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import ttk
 from graphics_interface import SortingGraphics
 from algorithms import *
+from threading import Thread
 
 
 class Controller():
@@ -33,13 +34,11 @@ class Controller():
             self.algorithm_classes.append(InsertionSort)
             self.algorithm_classes.append(BubbleSort)
             self.algorithm_classes.append(HeapSort)
-            self.algorithm_classes.append(MergeSort)
             
             self.algorithm_names.append('Selection Sort')
             self.algorithm_names.append('Insertion Sort')
             self.algorithm_names.append('Bubble Sort')      
             self.algorithm_names.append('Heap Sort')
-            self.algorithm_names.append('Merge Sort')
             
             #used to maintain information about current algorithm
             self.current_algorithm_index = 0
@@ -59,33 +58,13 @@ class Controller():
         '''
         Starts the processing of the next algorithm in the algorithm collection.
         '''    
-        name = ttk.Label(text = self.algorithm_names[self.current_algorithm_index])
-        name.grid(row = 2, column = 3) 
+        if (self.algorithm == None):
+            name = ttk.Label(text = self.algorithm_names[self.current_algorithm_index])
+            name.grid(row = 2, column = 3) 
         
-        self.algorithm_classes[self.current_algorithm_index](canvas)
-        #return to first class if past end of list
-        self.current_algorithm_index = (self.current_algorithm_index + 1) % len(self.algorithm_classes)
-        
-    
-    def manage_multithreads(self: 'Controller') -> None:
-        '''
-        Will allow or disallow multiple threads to run at the same time. Allows if 
-        the funky checkbox is checked, and disallows if the funky checkbox is not checked.
-        TODO: implement proper threading functionality
-        '''
-        
-        #alternate the value of self.funky every time this method is called
-        if (self.funky):
-            self.funky = False
-        else: 
-            self.funky = True
-        
-        if (self.funky):
-            pass
-        else:
-            pass
-            
-        return
+            self.algorithm_classes[self.current_algorithm_index](canvas)
+            #return to first class if past end of list
+            self.current_algorithm_index = (self.current_algorithm_index + 1) % len(self.algorithm_classes)
     
     def __init__(self: 'Controller') -> None:
         '''
@@ -102,20 +81,17 @@ class Controller():
         canvas = Canvas(root, bg = 'white', width = 800, height = 600)
         previous_button = ttk.Button(root, text = "Previous", command = lambda: self.previous_algorithm(canvas))
         next_button = ttk.Button(root, text = "Next", command = lambda: self.next_algorithm(canvas)) 
-        funky = ttk.Checkbutton(root, text = "Funky", command = self.manage_multithreads())
-                                
+     
         #canvas and buttons are organized onto screen, with canvas displayed and 
-        # the two buttons centered under canvas, and 'funky' checkbox
+        # the two buttons centered under canvas
         canvas.grid(row = 0, column = 0, columnspan = 25)
         previous_button.grid(row = 2, column = 12)
         next_button.grid(row = 2, column = 13)   
-        funky.grid(row = 2, column = 18)
         
         self.add_algorithms()
         #self.next_algorithm(canvas)	
         root.mainloop()
         
-        
-#TODO: get rid of
+#Start the actual program.
 controller = Controller()
 
